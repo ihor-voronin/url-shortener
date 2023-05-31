@@ -12,6 +12,10 @@ pre-commit = "*"
 [packages]
 fastapi = "*"
 uvicorn = "*"
+sqlalchemy = "*"
+alembic = "*"
+psycopg2 = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.9"
