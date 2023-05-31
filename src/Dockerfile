@@ -17,8 +17,8 @@ RUN pip install --user pipenv
 
 ENV PIPENV_VENV_IN_PROJECT=1
 
-RUN /root/.local/bin/pipenv sync
+RUN /root/.local/bin/pipenv install --system
 
-RUN ./.venv/bin/python -c "import fastapi; print(fastapi.__version__)"
+RUN python -c "import fastapi; print(fastapi.__version__)"
 
 COPY . .
