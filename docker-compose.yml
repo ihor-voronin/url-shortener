@@ -1,21 +1,13 @@
+version: "0.2"
 services:
-  api:
-    build: ./src
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+  postgres_db:
+    image: postgres:11
     volumes:
-      - ./src:/src
+      - postgres_data:/var/lib/postgresql/11/data/
     ports:
-      - 8000:8000
-    environment:
-      - DATABASE_URL=postgresql://dev:dev@db:5432/dev
-    depends_on:
-      db:
-        condition: service_healthy
-
-  db:
-    image: postgres:15.1-bullseye
-    volumes:
-      - postgres_data:/var/lib/postgresql/data/
+      - "5432:5432"
+    expose:
+      - 5432
     environment:
       - POSTGRES_USER=dev
       - POSTGRES_PASSWORD=dev
@@ -26,6 +18,31 @@ services:
       timeout: 30s
       retries: 5
       start_period: 10s
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=pgadmin4@pgadmin.org
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres_db
+
+  api:
+    build: .
+    command: bash -c "PYTHONPATH=. alembic upgrade head && uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"
+    volumes:
+      - ./src:/code
+    ports:
+      - "8000:8000"
+    restart: always
+    environment:
+      - DATABASE_URL=postgresql://dev:dev@postgres_db:5432/dev
+    depends_on:
+      postgres_db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
