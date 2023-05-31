@@ -14,3 +14,6 @@ repos:
     hooks:
       - id: mypy
         args: [ "--config-file", "./src/mypy.ini", "--cache-dir=/dev/null"]
+        additional_dependencies:
+          - 'fastapi'
+          - 'alembic'
