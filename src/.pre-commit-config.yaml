@@ -13,5 +13,4 @@ repos:
     rev: v1.3.0
     hooks:
       - id: mypy
-        args: [ "--config-file", "./src/mypy.ini"]
-
+        args: [ "--config-file", "./src/mypy.ini", "--cache-dir=/dev/null"]
