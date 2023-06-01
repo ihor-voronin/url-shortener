@@ -17,6 +17,7 @@ alembic = "*"
 psycopg2 = "*"
 python-dotenv = "*"
 pytest = "*"
+httpx = "*"
 
 [requires]
 python_version = "3.9"
