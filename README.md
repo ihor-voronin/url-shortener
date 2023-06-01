@@ -22,6 +22,9 @@
     <img src="https://img.shields.io/badge/version--control-pipenv-darkgray" alt="pipenv">
 </a>
 <img src="https://img.shields.io/badge/build-docker-blue" alt="docker">
+<a href="https://github.com/ihor-voronin/url-shortener/actions/workflows/ci.yml">
+    <img src="https://github.com/ihor-voronin/url-shortener/actions/workflows/ci.yml/badge.svg?branch=release" alt="pipenv">
+</a>
 </div>
 
 <details><summary>Docker version</summary>
