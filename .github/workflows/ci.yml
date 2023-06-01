@@ -1,0 +1,58 @@
+
+name: CI
+
+on:
+  push:
+    branches:
+      - release
+  pull_request:
+    branches:
+      - release
+
+jobs:
+  test:
+    env:
+      DATABASE_URL: postgresql://test:test@localhost:5432/test
+
+    runs-on: ubuntu-latest
+    services:
+      testdb:
+        image: postgres:15.1-bullseye
+        ports:
+          - 5432:5432
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        working-directory: ./src
+        run: |
+          sudo apt-get --yes install gcc python3-dev libpq-dev
+          pip install --upgrade pip
+          pip install pipenv
+          pipenv install --system --deploy --ignore-pipfile
+      - name: Run database migrations
+        run: alembic upgrade head
+        working-directory: ./src
+        env:
+          PYTHONPATH: ${{ github.workspace }}/src
+
+      - name: Test
+        run: pytest
+        working-directory: ./src
+        env:
+          PYTHONPATH: ${{ github.workspace }}/src
